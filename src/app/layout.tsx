@@ -7,7 +7,7 @@ import StoreProvider from "./StoreProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Receipt Maker",
+  title: "Recipe Maker",
   description:
     "User bisa membuat resep masakan dari website ini, mulai dari memilih bahan, tata cara pembuatan, dan menambahkan gambar resep",
 };
