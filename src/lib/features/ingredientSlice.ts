@@ -1,7 +1,4 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { enableMapSet } from "immer";
-
-enableMapSet();
 
 export type UOM = "Kg" | "Sdm" | "Sdt";
 

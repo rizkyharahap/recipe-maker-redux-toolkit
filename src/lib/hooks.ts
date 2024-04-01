@@ -1,6 +1,7 @@
-import { useDispatch, useSelector, useStore } from "react-redux";
-import type { AppDispatch, AppStore, RootState } from "./store";
 import { useCallback } from "react";
+import { useDispatch, useSelector, useStore } from "react-redux";
+
+import type { AppDispatch, AppStore, RootState } from "./store";
 
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 export const useAppSelector = useSelector.withTypes<RootState>();
@@ -12,9 +13,7 @@ export const useEnterCallback = (
 ) =>
   useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter") {
-        return cb(e);
-      }
+      if (e.key === "Enter") return cb(e);
     },
     [cb, ...deps]
   );

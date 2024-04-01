@@ -21,7 +21,7 @@ const IngredientList = () => {
   }, [ingredient.choosedIngredientIds, ingredient.ingredients]);
 
   const onSelectIngredient = useCallback((ingredient: Ingredient) => {
-    dispatch(addIngredient(ingredient));
+    dispatch(addIngredient({ ...ingredient, amount: 0 }));
     dispatch(chooseIngredient(ingredient.id));
   }, []);
 

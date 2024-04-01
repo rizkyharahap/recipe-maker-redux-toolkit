@@ -2,7 +2,13 @@ import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { type Ingredient } from "./ingredientSlice";
 
 export interface RecipeIngredient extends Ingredient {
-  amount?: number;
+  amount: number;
+}
+
+export interface SelectedAction {
+  type: "ingredient" | "step";
+  index: number;
+  isEdit?: boolean;
 }
 
 export interface RecipeSliceState {
@@ -10,8 +16,7 @@ export interface RecipeSliceState {
   ingredients: RecipeIngredient[];
   steps: string[];
   image: File | null;
-  editableIngridientIdx: number;
-  editableStepIdx: number;
+  selectedAction: SelectedAction;
 }
 
 const initialState: RecipeSliceState = {
@@ -19,8 +24,11 @@ const initialState: RecipeSliceState = {
   ingredients: [],
   steps: [],
   image: null,
-  editableIngridientIdx: -1,
-  editableStepIdx: -1,
+  selectedAction: {
+    type: "ingredient",
+    index: -1,
+    isEdit: false,
+  },
 };
 
 export const recipeSlice = createSlice({
@@ -34,20 +42,18 @@ export const recipeSlice = createSlice({
 
     addIngredient: create.reducer(
       (state, action: PayloadAction<RecipeIngredient>) => {
-        state.editableIngridientIdx = state.ingredients.length;
         state.ingredients.push(action.payload);
+
+        // make editable selected action
+        state.selectedAction.isEdit = true;
+        state.selectedAction.index = state.ingredients.length - 1;
+        state.selectedAction.type = "ingredient";
       }
     ),
 
     updateIngredient: create.reducer(
-      (state, action: PayloadAction<{ idx: number; amount: number }>) => {
-        state.ingredients[action.payload.idx].amount = action.payload.amount;
-      }
-    ),
-
-    setEditableIngredient: create.reducer(
-      (state, action: PayloadAction<number | undefined>) => {
-        state.editableIngridientIdx = action?.payload ?? -1;
+      (state, action: PayloadAction<{ index: number; amount: number }>) => {
+        state.ingredients[action.payload.index].amount = action.payload.amount;
       }
     ),
 
@@ -56,19 +62,16 @@ export const recipeSlice = createSlice({
     }),
 
     upsertStep: create.reducer((state, action: PayloadAction<string>) => {
-      if (state.editableStepIdx < 0) {
+      if (!state.selectedAction?.isEdit) {
         state.steps.push(action.payload);
       } else {
-        state.steps[state.editableStepIdx] = action.payload;
-        state.editableStepIdx = -1;
+        state.steps[state.selectedAction.index] = action.payload;
+
+        // reset selection action
+        state.selectedAction.index = -1;
+        state.selectedAction.isEdit = false;
       }
     }),
-
-    setEditableStep: create.reducer(
-      (state, action: PayloadAction<number | undefined>) => {
-        state.editableStepIdx = action?.payload ?? -1;
-      }
-    ),
 
     removeStep: create.reducer((state, action: PayloadAction<number>) => {
       state.steps.splice(action.payload, 1);
@@ -81,18 +84,23 @@ export const recipeSlice = createSlice({
     removeImage: create.reducer((state) => {
       state.image = null;
     }),
+
+    setSelectedAction: create.reducer(
+      (state, action: PayloadAction<SelectedAction>) => {
+        state.selectedAction = action.payload;
+      }
+    ),
   }),
 });
 
 export const {
   addIngredient,
-  upsertStep,
   removeIngredient,
   updateIngredient,
+  upsertStep,
+  removeStep,
   updateName,
   addImage,
-  setEditableIngredient,
   removeImage,
-  removeStep,
-  setEditableStep,
+  setSelectedAction,
 } = recipeSlice.actions;
