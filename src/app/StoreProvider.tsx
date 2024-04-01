@@ -1,7 +1,9 @@
 "use client";
-import { useEffect, useRef } from "react";
+
+import { useRef } from "react";
 import { Provider } from "react-redux";
-import { makeStore, AppStore } from "../lib/store";
+
+import { makeStore, type AppStore } from "@/lib/store";
 
 interface Props {
   readonly children: React.ReactNode;
