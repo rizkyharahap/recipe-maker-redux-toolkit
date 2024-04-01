@@ -1,7 +1,8 @@
 import { combineSlices, configureStore } from "@reduxjs/toolkit";
-import { counterSlice } from "./features/counterSlice";
+import { ingredientSlice } from "./features/ingredientSlice";
+import { recipeSlice } from "./features/recipeSlice";
 
-const rootReducer = combineSlices(counterSlice);
+const rootReducer = combineSlices(ingredientSlice, recipeSlice);
 
 export const makeStore = () => {
   return configureStore({
